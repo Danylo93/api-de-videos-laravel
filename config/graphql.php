@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 return [
     'route' => [
@@ -75,14 +75,24 @@ return [
     'schemas' => [
         'default' => [
             'query' => [
-                // ExampleQuery::class,
+                'categories' => \App\GraphQL\Query\CategoriesQuery::class,
+                'category' => \App\GraphQL\Query\CategoryQuery::class,
+                'genres' => \App\GraphQL\Query\Genres\GenresQuery::class,
+                'genre' => \App\GraphQL\Query\Genres\GenreQuery::class,
+                'cast_members' => \App\GraphQL\Query\CastMembers\CastMembersQuery::class,
+                'cast_member' => \App\GraphQL\Query\CastMembers\CastMemberQuery::class,
+                'videos' => \App\GraphQL\Query\Videos\VideosQuery::class,
+                'video' => \App\GraphQL\Query\Videos\VideoQuery::class,
             ],
             'mutation' => [
                 // ExampleMutation::class,
             ],
             // The types only available in this schema
             'types' => [
-                // ExampleType::class,
+                'Category' => \App\GraphQL\Types\CategoryType::class,
+                'Genre' => \App\GraphQL\Types\GenreType::class,
+                'CastMember' => \App\GraphQL\Types\CastMemberType::class,
+                'Video' => \App\GraphQL\Types\VideoType::class,
             ],
 
             // Laravel HTTP middleware
@@ -110,6 +120,11 @@ return [
         // ExampleRelationType::class,
         // \Rebing\GraphQL\Support\UploadType::class,
     ],
+
+    // The types will be loaded on demand. Default is to load all types on each request
+    // Can increase performance on schemes with many types
+    // Presupposes the config type key to match the type class name property
+    'lazyload_types' => true,
 
     // This callable will be passed the Error object for each errors GraphQL catch.
     // The method should return an array representing the error.
@@ -151,6 +166,17 @@ return [
      * Reference \Rebing\GraphQL\Support\SimplePaginationType::class
      */
     'simple_pagination_type' => \Rebing\GraphQL\Support\SimplePaginationType::class,
+
+    /*
+     * Config for GraphiQL (see (https://github.com/graphql/graphiql).
+     */
+    'graphiql' => [
+        'prefix' => 'graphiql', // Do NOT use a leading slash
+        'controller' => \Rebing\GraphQL\GraphQLController::class . '@graphiql',
+        'middleware' => [],
+        'view' => 'graphql::graphiql',
+        'display' => env('ENABLE_GRAPHIQL', true),
+    ],
 
     /*
      * Overrides the default field resolver
